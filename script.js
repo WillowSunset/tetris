@@ -24,16 +24,58 @@ const state = [
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
 ]
 
-const tetromino = [``
-    [1,1],
-    [1,1]
-]
+let shape = 'T';
+let variant = 0;
+
+const tetrominos = {
+    T: [
+        [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 0, 0],
+        ],
+        [
+            [0, 1, 0],
+            [1, 1, 0],
+            [0, 1, 0],
+        ],
+        [
+            [0, 0, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+        ],
+        [
+            [0, 1, 0],
+            [0, 1, 1],
+            [0, 1, 0],
+        ],
+
+    ]
+}
+
 let rowIndex = 0;
-let columnIndex = 5;
+let columnIndex = 4;
 
 render();
 
 onkeydown = handleKeys;
+
+function moveDown() {
+    rowIndex++;
+}
+function moveRight() {
+    columnIndex++;
+}
+function moveLeft() {
+    columnIndex--;
+}
+
+function rotate(){
+    variant++;
+    if(variant >= 4){
+        variant = 0;
+    }
+}
 
 function handleKeys(e) {
     if (e.key == 'ArrowLeft') {
@@ -44,17 +86,21 @@ function handleKeys(e) {
         rotate()
     } else if (e.key == 'ArrowDown') {
         moveDown()
+    } else {
+        return;
     }
+    render();
 }
 
-function render() {    
+function render() {
     const stencil = structuredClone(state);
+    const tetromino = tetrominos[shape][variant];
 
     for (let i = 0; i < tetromino.length; i++) {
         const row = tetromino[i];
         for (let j = 0; j < row.length; j++) {
             const cell = row[j];
-            stencil[i + rowIndex][j + columnIndex] = cell;
+            if (cell) stencil[i + rowIndex][j + columnIndex] = cell;
         }
     }
 
